@@ -1,3 +1,7 @@
+/* AI Prompt Used: Create a simple site where users can get jokes from the API listed in the utilities file. 
+Make the site basic for now using the html, css, and js files. 
+Ensure that safe mode is used from the API as well. */
+
 const JOKE_API_URL = "https://v2.jokeapi.dev/joke/Any";
 
 const jokeContent = document.querySelector("#joke-content");
