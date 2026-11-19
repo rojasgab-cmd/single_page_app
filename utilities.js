@@ -1,4 +1,4 @@
-const JOKE_API_URL = "https://v2.jokeapi.dev/jokes/random";
+const JOKE_API_URL = "https://v2.jokeapi.dev/joke/Any";
 
 const jokeContent = document.querySelector("#joke-content");
 const jokeCategory = document.querySelector("#joke-category");
