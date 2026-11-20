@@ -1,8 +1,6 @@
-/* AI Prompt Used: Create a simple site where users can get jokes from the API listed in the utilities file. 
-Make the site basic for now using the html, css, and js files. 
-Ensure that safe mode is used from the API as well. */
 
 const JOKE_API_URL = "https://v2.jokeapi.dev/joke/Any";
+const GEEK_JOKE_API_URL = "https://geek-jokes.sameerkumar.website/api?format=json";
 
 const jokeContent = document.querySelector("#joke-content");
 const jokeCategory = document.querySelector("#joke-category");
@@ -19,19 +17,24 @@ getJokeButton.addEventListener("click", async () => {
   jokeContent.append(loadingMessage);
 
   try {
-    const response = await fetch(`${JOKE_API_URL}?safe-mode`);
+    const useGeekJokes = Math.random() < 0.5;
+    const response = await fetch(
+      useGeekJokes ? GEEK_JOKE_API_URL : `${JOKE_API_URL}?safe-mode`,
+    );
     if (!response.ok) {
       throw new Error(`Joke request failed (${response.status}).`);
     }
 
     const data = await response.json();
-    if (data.error) {
+    if (!useGeekJokes && data.error) {
       throw new Error("The joke service couldn't find a joke right now.");
     }
 
-    const lines = data.type === "twopart"
-      ? [data.setup, data.delivery]
-      : [data.joke];
+    const lines = useGeekJokes
+      ? [data.joke]
+      : data.type === "twopart"
+        ? [data.setup, data.delivery]
+        : [data.joke];
     if (lines.some((line) => typeof line !== "string" || !line.trim())) {
       throw new Error("The joke service returned an invalid joke.");
     }
@@ -43,7 +46,7 @@ getJokeButton.addEventListener("click", async () => {
         return paragraph;
       }),
     );
-    jokeCategory.textContent = `${data.category} joke`;
+    jokeCategory.textContent = `${useGeekJokes ? "Geek" : data.category} joke`;
   } catch (error) {
     jokeContent.replaceChildren();
     statusMessage.textContent = error instanceof Error
